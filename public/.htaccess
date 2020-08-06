@@ -1,0 +1,18 @@
+<IfModule mod_expires.c>
+    ExpiresActive On
+    <FilesMatch "\.(jpg|jpeg|png|gif|js|css)$">
+        ExpiresDefault "access plus 7 days"
+    </FilesMatch>
+</IfModule>
+
+Options FollowSymLinks
+
+RewriteEngine on
+
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME}  -f
+RewriteRule  ^.*$  -  [L]
+
+RewriteRule ^(.*)$ index.php?/$1 [L,QSA,NS]

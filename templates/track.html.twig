@@ -1,0 +1,22 @@
+{% extends 'default.html.twig' %}
+
+{% block content %}
+    <main>
+        <section id="content">
+            <h1>URL Click Counter</h1>
+            <p>Enter the URL to find out how many clicks it has received so far.</p>
+        </section>
+        <section id="urlbox">
+            <br><br>
+            <form action="/clicks" method="get">
+                <div id="formurl">
+                    <input type="text" name="url" placeholder="Enter here your shortened URL">
+                    <div id="formbutton">
+                        <input type="submit" value="Track Clicks">
+                    </div>
+                </div>
+            </form>
+            <p style="padding: 0 50px;">Example: {{base_url('AbCdE') | replace({'http://': '', 'https://': ''}) }}</p>
+        </section>
+    </main>
+{% endblock %}
