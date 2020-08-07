@@ -3,14 +3,18 @@
 {% block content %}
     <section id="urlbox">
         <h1>Paste the URL to be shortened</h1>
+
         <form action="{{ base_url('create') }}" method="post">
             {{ csrf_token_inputs() }}
             <div id="formurl">
-                <input type="text" name="url" placeholder="Enter the link here">
+                <input type="text" name="url" placeholder="Enter the link here" value="{% if (url is defined) %}{{ url }}{% endif %}">
                 <div id="formbutton">
                     <input type="submit" value="Shorten URL">
                 </div>
             </div>
+            {% if (error is defined) and error  %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
         </form>
         <p class="boxtextcenter"><strong>{{ app_name() }}</strong> is a free tool to shorten a URL or reduce a link.<br>
             Use our URL Shortener to create a shortened link making it easy to remember.

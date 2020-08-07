@@ -25,10 +25,21 @@ class UrlController extends AbstractController
     public function create(Request $request, Response $response)
     {
         $body = $request->getParsedBody();
-        $url = $body['url'] ?? null;
-        if (!$url || !filter_var($body['url'], FILTER_VALIDATE_URL)) {
-            return $this->render($response, 'home.html.twig', ['error' => 'Url is empty or invalid']);
+        $url = trim($body['url'] ?? '');
+        $error = null;
+        if (!$url) {
+            $error = 'Link cannot be empty!';
         }
+        if (!$url || !preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $url)) {
+            $error = 'Link is invalid! Please enter correct url address!';
+        }
+        if ($error) {
+            return $this->render($response, 'home.html.twig', [
+                'error' => $error,
+                'url' => $url
+            ]);
+        }
+
         $link = new ShortLink();
         $uuid = Uuid::uuid4();
         $link->id = $uuid;
@@ -66,13 +77,13 @@ class UrlController extends AbstractController
         if (!$url) {
             throw new HttpNotFoundException($request, "link not provided");
         }
-        $hash = substr($url,-5);
+        $hash = substr($url, -5);
         $link = $this->findLinkByHash((string)$hash);
         if (!$link) {
             throw new HttpNotFoundException($request, "link with hash `{$hash}` not found");
         }
 
-        return $this->render($response,'stats.html.twig',['clicks' => $link->clicks, 'url' => $link->url]);
+        return $this->render($response, 'stats.html.twig', ['clicks' => $link->clicks, 'url' => $link->url]);
     }
 
     public function handle(Request $request, Response $response, $args)

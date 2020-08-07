@@ -369,6 +369,20 @@ footer {
     bottom: 0;
     height: 40px;
 }
+
+.copy-input {
+    max-width: 400px;
+}
+
+.error {
+    color: crimson;
+    margin-top: 5px;
+    font-size: 16px;
+}
+.example {
+    padding: 0 50px;
+}
+
 @media all and (max-width: 499px) {
     main {
         padding: 0 10px;
