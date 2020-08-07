@@ -23,7 +23,7 @@ return [
             ]
         );
         $twig->getEnvironment()->addFunction(new TwigFunction('base_url',function (string $str = ''){
-            return env('APP_URL').$str;
+            return base_url($str);
         }));
         $twig->getEnvironment()->addFunction(new TwigFunction('app_name',function (){
             return env('APP_NAME');

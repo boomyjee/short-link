@@ -36,7 +36,7 @@ class UrlController extends AbstractController
         $link->url = $url;
         $this->em->persist($link);
         $this->em->flush();
-        return $response->withStatus(302)->withHeader('location', '/view/' . $link->hash);
+        return $response->withStatus(302)->withHeader('location', base_url('view/' . $link->hash));
     }
 
     public function show(Request $request, Response $response, $args)
@@ -72,7 +72,7 @@ class UrlController extends AbstractController
             throw new HttpNotFoundException($request, "link with hash `{$hash}` not found");
         }
 
-        return $this->render($response,'stats.html.twig',['clicks'=>$link->clicks]);
+        return $this->render($response,'stats.html.twig',['clicks' => $link->clicks, 'url' => $link->url]);
     }
 
     public function handle(Request $request, Response $response, $args)
