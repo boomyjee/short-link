@@ -1,30 +1,43 @@
 <?php declare(strict_types=1);
 
+use Psr\Log\LoggerInterface;
 use Slim\App;
+use Slim\Exception\HttpNotFoundException;
+use Slim\Middleware\ErrorMiddleware;
+use Slim\Views\Twig;
 
 return static function (App $app): void {
     $app->addRoutingMiddleware();
 
-    $config = $app->getContainer()->get('config')['default'];
+    $container = $app->getContainer();
 
-    $errorMiddleware = $app->addErrorMiddleware($config['debug'], $config['logErrors'], $config['logErrorsDetails']);
+    $errorMiddleware = $container->get(ErrorMiddleware::class);
+    $app->add($errorMiddleware);
     $notFoundErrorHandler = function (
         Psr\Http\Message\ServerRequestInterface $request,
-        \Throwable $exception,
+        Throwable $exception,
         bool $displayErrorDetails,
         bool $logErrors,
         bool $logErrorDetails
-    ) use ($app) {
+    ) use ($app, $container) {
         $response = $app->getResponseFactory()->createResponse();
 
         $message = $exception->getMessage();
         $response->withStatus(404);
-        $container = $app->getContainer();
-        $view = $container->get(\Slim\Views\Twig::class);
 
-        return $view->render($response,'errors/404.html.twig',['error'=>$message]);;
+        if($logErrors) {
+            $logger = $container->get(LoggerInterface::class);
+            $logger->error($message, [
+                'exception' => $exception,
+                'url' => (string)$request->getUri(),
+            ]);
+        }
+
+        $view = $container->get(Twig::class);
+
+        return $view->render($response,'errors/404.html.twig',['error'=>$message]);
     };
 
-    $errorMiddleware->setErrorHandler(\Slim\Exception\HttpNotFoundException::class, $notFoundErrorHandler);
+    $errorMiddleware->setErrorHandler(HttpNotFoundException::class, $notFoundErrorHandler);
 
 };

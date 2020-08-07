@@ -31,7 +31,7 @@ return [
 
     'config' => [
         'twig' => [
-            'debug' => (bool)getenv('APP_DEBUG'),
+            'debug' => (bool)env('APP_DEBUG'),
             'template_dirs' => [
                 FilesystemLoader::MAIN_NAMESPACE => __DIR__ . '/../../templates',
             ],
