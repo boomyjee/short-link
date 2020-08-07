@@ -4,6 +4,7 @@
     <section id="urlbox">
         <h1>Paste the URL to be shortened</h1>
         <form action="/create" method="post">
+            {{ csrf_token_inputs() }}
             <div id="formurl">
                 <input type="text" name="url" placeholder="Enter the link here">
                 <div id="formbutton">

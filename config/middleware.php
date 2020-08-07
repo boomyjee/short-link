@@ -2,6 +2,7 @@
 
 use Psr\Log\LoggerInterface;
 use Slim\App;
+use Slim\Csrf\Guard;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Middleware\ErrorMiddleware;
 use Slim\Views\Twig;
@@ -39,5 +40,8 @@ return static function (App $app): void {
     };
 
     $errorMiddleware->setErrorHandler(HttpNotFoundException::class, $notFoundErrorHandler);
+
+
+    $app->add(Guard::class);
 
 };

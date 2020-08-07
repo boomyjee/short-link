@@ -2,7 +2,7 @@
 
 use Psr\Container\ContainerInterface;
 use Slim\Factory\AppFactory;
-
+session_start();
 require __DIR__ . '/../vendor/autoload.php';
 
 /** @var ContainerInterface $container */
