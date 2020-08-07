@@ -25,14 +25,15 @@ class UrlController extends AbstractController
     public function create(Request $request, Response $response)
     {
         $body = $request->getParsedBody();
-        $url = trim($body['url'] ?? '');
+        $url = trim($body['url'] ?? null);
         $error = null;
         if (!$url) {
             $error = 'Link cannot be empty!';
-        }
-        if (!$url || !preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $url)) {
+
+        } elseif (!preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $url)) {
             $error = 'Link is invalid! Please enter correct url address!';
         }
+        
         if ($error) {
             return $this->render($response, 'home.html.twig', [
                 'error' => $error,
